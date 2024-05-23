@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Reactive.Bindings;
+using System;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -13,11 +14,11 @@ namespace WpfApp1
         private INotifyCollectionChanged? items;
         private readonly string propertyName;
 
-        public override string? DisplayMenber => this.propertyName;
+        public override ReactivePropertySlim<string?> DisplayMenber => new(this.propertyName);
 
         public ObservableCollection<UnlimitedSelectionItemViewModel> Selections { get; } = new();
 
-        public override bool IsFiltering => this.Selections.Any(s => s.IsSelected);
+        public override ReactivePropertySlim<bool> IsFiltering => new(this.Selections.Any(s => s.IsSelected.Value));
 
         public UnlimitedSelectionColumnViewModel(string propertyName, IEnumerable items)
         {
@@ -46,14 +47,14 @@ namespace WpfApp1
 
         protected override bool FilterOverride(object itemVm)
         {
-            if (!this.IsFiltering) { return true; }
+            if (!this.IsFiltering.Value) { return true; }
             var property = itemVm.GetType().GetProperty(this.propertyName);
             if (property is null)
             {
                 return false;
             }
             var value = property.GetValue(itemVm);
-            return this.Selections.FirstOrDefault(s => object.Equals(s.Value, value))?.IsSelected ?? false;
+            return this.Selections.FirstOrDefault(s => object.Equals(s.Value, value))?.IsSelected.Value ?? false;
         }
 
         public override GroupDescription GroupOverride()
@@ -65,9 +66,9 @@ namespace WpfApp1
         {
             foreach (var selection in this.Selections)
             {
-                selection.IsSelected = false;
+                selection.IsSelected.Value = false;
             }
-            this.IsGrouping = false;
+            this.IsGrouping.Value = false;
         }
 
         private void Items_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -91,7 +92,8 @@ namespace WpfApp1
             }
             this.Selections.Clear();
             foreach (var value in items.Cast<object>()
-                .Select(item => {
+                .Select(item =>
+                {
                     var property = item.GetType().GetProperty(this.propertyName);
                     if (property is null)
                     {

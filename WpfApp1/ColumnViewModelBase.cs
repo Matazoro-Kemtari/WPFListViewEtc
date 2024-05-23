@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Reactive.Bindings;
 using System;
 using System.ComponentModel;
 using System.Windows.Input;
@@ -8,30 +9,16 @@ namespace WpfApp1
 {
     internal abstract class ColumnViewModelBase : ObservableObject
     {
-        public virtual string? DisplayMenber { get; } = null;
+        public virtual ReactivePropertySlim<string?> DisplayMenber { get; } = new();
         public virtual object? CellTemplateResourceKey { get; } = null;
 
-        private bool isSorting;
-        public bool IsSorting
-        {
-            get => this.isSorting;
-            private set => this.SetProperty(ref this.isSorting, value);
-        }
-        private ListSortDirection? sortDirection;
-        public ListSortDirection? SortDirection
-        {
-            get => this.sortDirection;
-            private set => this.SetProperty(ref this.sortDirection, value);
-        }
+        public ReactivePropertySlim<bool> IsSorting { get; set; } = new();
 
-        public abstract bool IsFiltering { get; }
+        public ReactivePropertySlim<ListSortDirection?> SortDirection { get; set; } = new();
 
-        private bool grouping;
-        public bool IsGrouping
-        {
-            get => this.grouping;
-            set => this.SetProperty(ref this.grouping, value);
-        }
+        public abstract ReactivePropertySlim<bool> IsFiltering { get; }
+
+        public ReactivePropertySlim<bool> IsGrouping { get; set; } = new();
 
         public ICommand SortCommand { get; }
         public ICommand FilterCommand { get; }
@@ -52,8 +39,8 @@ namespace WpfApp1
 
         public SortDescription Sort(ListSortDirection direction)
         {
-            this.IsSorting = true;
-            this.SortDirection = direction;
+            this.IsSorting.Value = true;
+            this.SortDirection.Value = direction;
             return this.SortOverride(direction);
         }
 
@@ -61,8 +48,8 @@ namespace WpfApp1
 
         public void ResetSort()
         {
-            this.IsSorting = false;
-            this.SortDirection = null;
+            this.IsSorting.Value = false;
+            this.SortDirection.Value = null;
         }
 
         public bool Filter(object itemVm)
@@ -80,7 +67,7 @@ namespace WpfApp1
 
         public void ResetGroup()
         {
-            this.IsGrouping = false;
+            this.IsGrouping.Value = false;
         }
 
         private void SortCommandExecute(ListSortDirection? sortDirection)
@@ -100,8 +87,8 @@ namespace WpfApp1
 
         private void ResetFilterCommandExecute()
         {
-            var isThisFiltering = this.IsFiltering;
-            var isThisGoruping = this.IsGrouping;
+            var isThisFiltering = this.IsFiltering.Value;
+            var isThisGoruping = this.IsGrouping.Value;
             this.ResetFilterAndGroupCommandExecuteOverride();
             if (isThisFiltering)
             {

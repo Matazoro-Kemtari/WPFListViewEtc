@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Reactive.Bindings;
+using System;
 using System.Collections;
 using System.ComponentModel;
 using System.Globalization;
@@ -9,50 +10,18 @@ namespace WpfApp1
     internal class BloodTypeColumnViewModel : ColumnViewModelBase
     {
         public override object CellTemplateResourceKey => "BloodTypeCell";
-        private bool showAType;
-        public bool ShowAType
-        {
-            get => this.showAType;
-            set
-            {
-                this.SetProperty(ref this.showAType, value);
-                this.OnPropertyChanged(nameof(this.IsFiltering));
-            }
-        }
-        private bool showBType;
-        public bool ShowBType
-        {
-            get => this.showBType;
-            set
-            {
-                this.SetProperty(ref this.showBType, value);
-                this.OnPropertyChanged(nameof(this.IsFiltering));
-            }
-        }
-        private bool showABType;
-        public bool ShowABType
-        {
-            get => this.showABType;
-            set
-            {
-                this.SetProperty(ref this.showABType, value);
-                this.OnPropertyChanged(nameof(this.IsFiltering));
-            }
-        }
-        private bool showOType;
-        public bool ShowOType
-        {
-            get => this.showOType;
-            set
-            {
-                this.SetProperty(ref this.showOType, value);
-                this.OnPropertyChanged(nameof(this.IsFiltering));
-            }
-        }
 
-        public override bool IsFiltering =>
-            this.ShowAType || this.ShowBType ||
-            this.ShowABType || this.ShowOType;
+        public ReactivePropertySlim<bool> ShowAType { get; set; } = new();
+
+        public ReactivePropertySlim<bool> ShowBType { get; set; } = new();
+
+        public ReactivePropertySlim<bool> ShowABType { get; set; } = new();
+
+        public ReactivePropertySlim<bool> ShowOType { get; set; } = new();
+
+        public override ReactivePropertySlim<bool> IsFiltering => new(
+            this.ShowAType.Value || this.ShowBType.Value ||
+            this.ShowABType.Value || this.ShowOType.Value);
 
         protected override SortDescription SortOverride(ListSortDirection direction)
         {
@@ -62,11 +31,11 @@ namespace WpfApp1
         protected override bool FilterOverride(object itemVm)
         {
             if (itemVm is not PersonViewModel pvm) { return false; }
-            if (!this.IsFiltering) { return true; }
-            return (this.ShowAType && pvm.BloodType == BloodType.A) ||
-                (this.ShowBType && pvm.BloodType == BloodType.B) ||
-                (this.ShowABType && pvm.BloodType == BloodType.AB) ||
-                (this.ShowOType && pvm.BloodType == BloodType.O); ;
+            if (!this.IsFiltering.Value) { return true; }
+            return (this.ShowAType.Value && pvm.BloodType == BloodType.A) ||
+                (this.ShowBType.Value && pvm.BloodType == BloodType.B) ||
+                (this.ShowABType.Value && pvm.BloodType == BloodType.AB) ||
+                (this.ShowOType.Value && pvm.BloodType == BloodType.O); ;
         }
 
         public override GroupDescription GroupOverride()
@@ -76,11 +45,11 @@ namespace WpfApp1
 
         protected override void ResetFilterAndGroupCommandExecuteOverride()
         {
-            this.ShowAType = false;
-            this.ShowBType = false;
-            this.ShowABType = false;
-            this.ShowOType = false;
-            this.IsGrouping = false;
+            this.ShowAType.Value = false;
+            this.ShowBType.Value = false;
+            this.ShowABType.Value = false;
+            this.ShowOType.Value = false;
+            this.IsGrouping.Value = false;
         }
 
         public class BloodTypeGroupDescription : GroupDescription

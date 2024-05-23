@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Input;
+using Reactive.Bindings;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,168 +19,43 @@ namespace WpfApp1
         private INotifyCollectionChanged? items;
         private ICollection<DateTime> filterRange;
 
-        public override string? DisplayMenber => this.propertyName;
+        public override ReactivePropertySlim<string?> DisplayMenber => new(this.propertyName);
 
-        private bool range;
-        public bool Range
-        {
-            get => this.range;
-            set
-            {
-                if (this.SetProperty(ref this.range, value) && value)
-                {
-                    this.Today = false;
-                    this.Yesterday = false;
-                    this.ThisWeek = false;
-                    this.LastWeek = false;
-                    this.ThisMonth = false;
-                    this.LastMonth = false;
-                    this.MorePast = false;
-                }
-                this.OnPropertyChanged(nameof(IsFiltering));
-            }
-        }
-        private bool today;
-        public bool Today
-        {
-            get => this.today;
-            set
-            {
-                if (this.SetProperty(ref this.today, value) && value)
-                {
-                    this.Range = false;
-                }
-                this.OnPropertyChanged(nameof(IsFiltering));
-            }
-        }
-        private bool yesterday;
-        public bool Yesterday
-        {
-            get => this.yesterday;
-            set
-            {
-                if (this.SetProperty(ref this.yesterday, value) && value)
-                {
-                    this.Range = false;
-                }
-                this.OnPropertyChanged(nameof(IsFiltering));
-            }
-        }
-        private bool thisWeek;
-        public bool ThisWeek
-        {
-            get => this.thisWeek;
-            set
-            {
-                if (this.SetProperty(ref this.thisWeek, value) && value)
-                {
-                    this.Range = false;
-                }
-                this.OnPropertyChanged(nameof(IsFiltering));
-            }
-        }
-        private bool lastWeek;
-        public bool LastWeek
-        {
-            get => this.lastWeek;
-            set
-            {
-                if (this.SetProperty(ref this.lastWeek, value) && value)
-                {
-                    this.Range = false;
-                }
-                this.OnPropertyChanged(nameof(IsFiltering));
-            }
-        }
-        private bool thisMonth;
-        public bool ThisMonth
-        {
-            get => this.thisMonth;
-            set
-            {
-                if (this.SetProperty(ref this.thisMonth, value) && value)
-                {
-                    this.Range = false;
-                }
-                this.OnPropertyChanged(nameof(IsFiltering));
-            }
-        }
-        private bool lastMonth;
-        public bool LastMonth
-        {
-            get => this.lastMonth;
-            set
-            {
-                if (this.SetProperty(ref this.lastMonth, value) && value)
-                {
-                    this.Range = false;
-                }
-                this.OnPropertyChanged(nameof(IsFiltering));
-            }
-        }
-        private bool morePast;
-        public bool MorePast
-        {
-            get => this.morePast;
-            set
-            {
-                if (this.SetProperty(ref this.morePast, value) && value)
-                {
-                    this.Range = false;
-                }
-                this.OnPropertyChanged(nameof(IsFiltering));
-            }
-        }
-        private bool todayExist;
-        public bool TodayExist
-        {
-            get => this.todayExist;
-            set => this.SetProperty(ref this.todayExist, value);
-        }
-        private bool yesterdayExist;
-        public bool YesterdayExist
-        {
-            get => this.yesterdayExist;
-            set => this.SetProperty(ref this.yesterdayExist, value);
-        }
-        private bool thisWeekExist;
-        public bool ThisWeekExist
-        {
-            get => this.thisWeekExist;
-            set => this.SetProperty(ref this.thisWeekExist, value);
-        }
-        private bool lastWeekExist;
-        public bool LastWeekExist
-        {
-            get => this.lastWeekExist;
-            set => this.SetProperty(ref this.lastWeekExist, value);
-        }
-        private bool thisMonthExist;
-        public bool ThisMonthExist
-        {
-            get => this.thisMonthExist;
-            set => this.SetProperty(ref this.thisMonthExist, value);
-        }
-        private bool lastMonthExist;
-        public bool LastMonthExist
-        {
-            get => this.lastMonthExist;
-            set => this.SetProperty(ref this.lastMonthExist, value);
-        }
-        private bool morePastExist;
-        public bool MorePastExist
-        {
-            get => this.morePastExist;
-            set => this.SetProperty(ref this.morePastExist, value);
-        }
+        public ReactivePropertySlim<bool> Range { get; set; } = new();
 
+        public ReactivePropertySlim<bool> Today { get; set; } = new();
+        public ReactivePropertySlim<bool> Yesterday { get; set; } = new();
 
-        public override bool IsFiltering =>
-            this.Range ||
-            this.Today || this.Yesterday ||
-            this.ThisWeek || this.LastWeek ||
-            this.ThisMonth || this.LastMonth ||
-            this.MorePast;
+        public ReactivePropertySlim<bool> ThisWeek { get; set; } = new();
+
+        public ReactivePropertySlim<bool> LastWeek { get; set; } = new();
+
+        public ReactivePropertySlim<bool> ThisMonth { get; set; } = new();
+
+        public ReactivePropertySlim<bool> LastMonth { get; set; } = new();
+
+        public ReactivePropertySlim<bool> MorePast { get; set; } = new();
+
+        public ReactivePropertySlim<bool> TodayExist { get; set; } = new();
+
+        public ReactivePropertySlim<bool> YesterdayExist { get; set; } = new();
+
+        public ReactivePropertySlim<bool> ThisWeekExist { get; set; } = new();
+
+        public ReactivePropertySlim<bool> LastWeekExist { get; set; } = new();
+
+        public ReactivePropertySlim<bool> ThisMonthExist { get; set; } = new();
+
+        public ReactivePropertySlim<bool> LastMonthExist { get; set; } = new();
+
+        public ReactivePropertySlim<bool> MorePastExist { get; set; } = new();
+
+        public override ReactivePropertySlim<bool> IsFiltering => new(
+            this.Range.Value ||
+            this.Today.Value || this.Yesterday.Value ||
+            this.ThisWeek.Value || this.LastWeek.Value ||
+            this.ThisMonth.Value || this.LastMonth.Value ||
+            this.MorePast.Value);
 
         public ICommand SelectFilterRangeComand { get; }
 
@@ -188,6 +64,69 @@ namespace WpfApp1
             this.propertyName = propertyName;
             this.filterRange = new List<DateTime> { DateTime.Today };
             this.SelectFilterRangeComand = new RelayCommand<SelectedDatesCollection>(this.SelectFilterRangeComandExecute);
+
+            Range.Subscribe(v =>
+            {
+                if (v)
+                {
+                    this.Today.Value = false;
+                    this.Yesterday.Value = false;
+                    this.ThisWeek.Value = false;
+                    this.LastWeek.Value = false;
+                    this.ThisMonth.Value = false;
+                    this.LastMonth.Value = false;
+                    this.MorePast.Value = false;
+                }
+            });
+            Today.Subscribe(v =>
+            {
+                if (v)
+                {
+                    Range.Value = false;
+                }
+            });
+            Yesterday.Subscribe(v =>
+            {
+                if (v)
+                {
+                    Range.Value = false;
+                }
+            });
+            ThisWeek.Subscribe(v =>
+            {
+                if (v)
+                {
+                    Range.Value = false;
+                }
+            });
+            LastWeek.Subscribe(v =>
+            {
+                if (v)
+                {
+                    Range.Value = false;
+                }
+            });
+            ThisMonth.Subscribe(v =>
+            {
+                if (v)
+                {
+                    Range.Value = false;
+                }
+            });
+            LastMonth.Subscribe(v =>
+            {
+                if (v)
+                {
+                    Range.Value = false;
+                }
+            });
+            MorePast.Subscribe(v =>
+            {
+                if (v)
+                {
+                    Range.Value = false;
+                }
+            });
 
             ShowFilters(items);
             if (items is INotifyCollectionChanged ncc)
@@ -212,21 +151,21 @@ namespace WpfApp1
 
         protected override bool FilterOverride(object itemVm)
         {
-            if (!this.IsFiltering) { return true; }
+            if (!this.IsFiltering.Value) { return true; }
 
             var value = itemVm.GetType().GetProperty(this.propertyName)?.GetValue(itemVm);
             if (value is not DateTime dt) { throw new NotImplementedException(); }
             var category = dt.CategorizeDateTime();
-            return 
-                (this.Range && this.filterRange!.Min().Date <= dt &&  dt < this.filterRange.Max().Date.AddDays(1)) ||
-                (!this.Range && (
-                    (this.Today && category == DateTimeCategory.Today) ||
-                    (this.Yesterday && category == DateTimeCategory.Yesterday) ||
-                    (this.ThisWeek && category == DateTimeCategory.ThisWeek) ||
-                    (this.LastWeek && category == DateTimeCategory.LastWeek) ||
-                    (this.ThisMonth && category == DateTimeCategory.ThisMonth) ||
-                    (this.LastMonth && category == DateTimeCategory.LastMonth) ||
-                    (this.MorePast && category == DateTimeCategory.MorePast)
+            return
+                (this.Range.Value && this.filterRange!.Min().Date <= dt && dt < this.filterRange.Max().Date.AddDays(1)) ||
+                (!this.Range.Value && (
+                    (this.Today.Value && category == DateTimeCategory.Today) ||
+                    (this.Yesterday.Value && category == DateTimeCategory.Yesterday) ||
+                    (this.ThisWeek.Value && category == DateTimeCategory.ThisWeek) ||
+                    (this.LastWeek.Value && category == DateTimeCategory.LastWeek) ||
+                    (this.ThisMonth.Value && category == DateTimeCategory.ThisMonth) ||
+                    (this.LastMonth.Value && category == DateTimeCategory.LastMonth) ||
+                    (this.MorePast.Value && category == DateTimeCategory.MorePast)
                     ));
         }
 
@@ -234,7 +173,7 @@ namespace WpfApp1
         {
             if (filterRange is null) { return; }
             this.filterRange = filterRange;
-            this.Range = true;
+            this.Range.Value = true;
             this.FilterCommand.Execute(null);
         }
 
@@ -245,15 +184,15 @@ namespace WpfApp1
 
         protected override void ResetFilterAndGroupCommandExecuteOverride()
         {
-            this.Range = false;
-            this.Today = false;
-            this.Yesterday = false;
-            this.ThisWeek = false;
-            this.LastWeek = false;
-            this.ThisMonth = false;
-            this.LastMonth = false;
-            this.MorePast = false;
-            this.IsGrouping = false;
+            this.Range.Value = false;
+            this.Today.Value = false;
+            this.Yesterday.Value = false;
+            this.ThisWeek.Value = false;
+            this.LastWeek.Value = false;
+            this.ThisMonth.Value = false;
+            this.LastMonth.Value = false;
+            this.MorePast.Value = false;
+            this.IsGrouping.Value = false;
         }
 
         private void Items_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -279,25 +218,25 @@ namespace WpfApp1
                 switch (dt.CategorizeDateTime())
                 {
                     case DateTimeCategory.Today:
-                        this.TodayExist = true;
+                        this.TodayExist.Value = true;
                         break;
                     case DateTimeCategory.Yesterday:
-                        this.YesterdayExist = true;
+                        this.YesterdayExist.Value = true;
                         break;
                     case DateTimeCategory.ThisWeek:
-                        this.ThisWeekExist = true;
+                        this.ThisWeekExist.Value = true;
                         break;
                     case DateTimeCategory.LastWeek:
-                        this.lastWeekExist = true;
+                        this.LastWeekExist.Value = true;
                         break;
                     case DateTimeCategory.ThisMonth:
-                        this.ThisMonthExist = true;
+                        this.ThisMonthExist.Value = true;
                         break;
                     case DateTimeCategory.LastMonth:
-                        this.LastMonthExist = true;
+                        this.LastMonthExist.Value = true;
                         break;
                     case DateTimeCategory.MorePast:
-                        this.MorePastExist = true;
+                        this.MorePastExist.Value = true;
                         break;
                 }
             }

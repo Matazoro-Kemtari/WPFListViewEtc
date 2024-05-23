@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Reactive.Bindings;
+using System;
 using System.ComponentModel;
 
 namespace WpfApp1
@@ -7,35 +8,29 @@ namespace WpfApp1
     {
         private string propertyName;
 
-        public override string? DisplayMenber => this.propertyName;
-        public string HeaderText { get; }
-        private string filterText = string.Empty;
-        public string FilterText 
-        {
-            get => this.filterText;
-            set
-            {
-                this.SetProperty(ref this.filterText, value);
-                this.OnPropertyChanged(nameof(this.IsFiltering));
-            }
-        }
-        public override bool IsFiltering => !string.IsNullOrEmpty(this.FilterText);
+        public override ReactivePropertySlim<string?> DisplayMenber => new(this.propertyName);
+        public ReactivePropertySlim<string> HeaderText { get; }
+
+        public ReactivePropertySlim<string> FilterText { get; set; }
+
+        public override ReactivePropertySlim<bool> IsFiltering => new(!string.IsNullOrEmpty(this.FilterText.Value));
 
         public StringColumnViewModel(string propertyName, string headerText)
         {
             this.propertyName = propertyName;
-            this.HeaderText = headerText;
+            this.HeaderText = new(headerText);
+            FilterText = new(string.Empty);
         }
 
         protected override SortDescription SortOverride(ListSortDirection direction)
         {
-            return new SortDescription($"{this.propertyName}.{nameof(StringViewModel.Value)}", direction);
+            return new SortDescription($"{this.propertyName}.{nameof(StringViewModel.Value)}.{nameof(StringViewModel.Value.Value)}", direction);
         }
 
         protected override bool FilterOverride(object itemVm)
         {
             return
-                (itemVm.GetType().GetProperty(this.propertyName)!.GetValue(itemVm) as StringViewModel)?.Filter(this.FilterText)
+                (itemVm.GetType().GetProperty(this.propertyName)!.GetValue(itemVm) as StringViewModel)?.Filter(this.FilterText.Value)
                 ?? false;
         }
 
@@ -46,7 +41,7 @@ namespace WpfApp1
 
         protected override void ResetFilterAndGroupCommandExecuteOverride()
         {
-            this.FilterText = string.Empty;
+            this.FilterText.Value = string.Empty;
         }
     }
 }
