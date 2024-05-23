@@ -75,7 +75,7 @@
                 <DataTrigger Binding="{Binding IsFiltering}" Value="True">
                     <Setter Property="Visibility" Value="Visible"/>
                 </DataTrigger>
-                <DataTrigger Binding="{Binding IsGrouping}" Value="True">
+                <DataTrigger Binding="{Binding IsGrouping.Value}" Value="True">
                     <Setter Property="Visibility" Value="Visible"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding IsMouseOver, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type GridViewColumnHeader}}}"
@@ -155,13 +155,13 @@
             <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Style.Triggers>
-                <DataTrigger Binding="{Binding IsSorting}" Value="False">
+                <DataTrigger Binding="{Binding IsSorting.Value}" Value="False">
                     <Setter Property="Visibility" Value="Hidden"/>
                 </DataTrigger>
-                <DataTrigger Binding="{Binding SortDirection}" Value="{x:Static component:ListSortDirection.Ascending}">
+                <DataTrigger Binding="{Binding SortDirection.Value}" Value="{x:Static component:ListSortDirection.Ascending}">
                     <Setter Property="Text" Value="&#xE70D;"/>
                 </DataTrigger>
-                <DataTrigger Binding="{Binding SortDirection}" Value="{x:Static component:ListSortDirection.Descending}">
+                <DataTrigger Binding="{Binding SortDirection.Value}" Value="{x:Static component:ListSortDirection.Descending}">
                     <Setter Property="Text" Value="&#xE70E;"/>
                 </DataTrigger>
             </Style.Triggers>
@@ -171,14 +171,14 @@
                 <TextBlock DockPanel.Dock="Top"
                            Style="{StaticResource SortOrderMarkStyle}"/>
                 <TextBox DockPanel.Dock="Right" Width="120"
-                         Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}"
+                         Text="{Binding FilterText.Value, UpdateSourceTrigger=PropertyChanged}"
                          x:Name="filterText">
                     <TextBox.Style>
                         <Style TargetType="{x:Type TextBox}">
                             <Style.Triggers>
                                 <MultiDataTrigger>
                                     <MultiDataTrigger.Conditions>
-                                        <Condition Binding="{Binding FilterText}" Value=""/>
+                                        <Condition Binding="{Binding FilterText.Value}" Value=""/>
                                         <Condition Binding="{Binding IsFocused, RelativeSource={RelativeSource Self}}" Value="False"/>
                                         <Condition Binding="{Binding IsMouseOver, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type GridViewColumnHeader}}}" Value="False"/>
                                     </MultiDataTrigger.Conditions>
@@ -209,7 +209,7 @@
                               CommandParameter="{x:Static component:ListSortDirection.Descending}"/>
                 </MenuItem>
                 <TextBlock HorizontalAlignment="Left"
-                           Text="{Binding HeaderText}"/>
+                           Text="{Binding HeaderText.Value}"/>
             </DockPanel>
         </DataTemplate>
         <DataTemplate DataType="{x:Type local:AgeColumnViewModel}">
@@ -227,40 +227,40 @@
                     </HeaderedContentControl.Header>
                     <StackPanel>
                         <CheckBox Content="10歳未満"
-                                  IsChecked="{Binding UnderTen}"
-                                  Visibility="{Binding UnderTenExist, Converter={StaticResource B2VCnv}}"
+                                  IsChecked="{Binding UnderTen.Value}"
+                                  Visibility="{Binding UnderTenExist.Value, Converter={StaticResource B2VCnv}}"
                                   Command="{Binding FilterCommand}"/>
                         <CheckBox Content="10歳台"
-                                  IsChecked="{Binding TeenAgers}"
-                                  Visibility="{Binding TeenAgersExist, Converter={StaticResource B2VCnv}}"
+                                  IsChecked="{Binding TeenAgers.Value}"
+                                  Visibility="{Binding TeenAgersExist.Value, Converter={StaticResource B2VCnv}}"
                                   Command="{Binding FilterCommand}"/>
                         <CheckBox Content="20歳台"
-                                  IsChecked="{Binding Twenties}"
-                                  Visibility="{Binding TwentiesExist, Converter={StaticResource B2VCnv}}"
+                                  IsChecked="{Binding Twenties.Value}"
+                                  Visibility="{Binding TwentiesExist.Value, Converter={StaticResource B2VCnv}}"
                                   Command="{Binding FilterCommand}"/>
                         <CheckBox Content="30歳台"
-                                  IsChecked="{Binding Thirties}"
-                                  Visibility="{Binding ThirtiesExist, Converter={StaticResource B2VCnv}}"
+                                  IsChecked="{Binding Thirties.Value}"
+                                  Visibility="{Binding ThirtiesExist.Value, Converter={StaticResource B2VCnv}}"
                                   Command="{Binding FilterCommand}"/>
                         <CheckBox Content="40歳台"
-                                  IsChecked="{Binding Fourties}"
-                                  Visibility="{Binding FourtiesExist, Converter={StaticResource B2VCnv}}"
+                                  IsChecked="{Binding Fourties.Value}"
+                                  Visibility="{Binding FourtiesExist.Value, Converter={StaticResource B2VCnv}}"
                                   Command="{Binding FilterCommand}"/>
                         <CheckBox Content="50歳台"
-                                  IsChecked="{Binding Fifties}"
-                                  Visibility="{Binding FiftiesExist, Converter={StaticResource B2VCnv}}"
+                                  IsChecked="{Binding Fifties.Value}"
+                                  Visibility="{Binding FiftiesExist.Value, Converter={StaticResource B2VCnv}}"
                                   Command="{Binding FilterCommand}"/>
                         <CheckBox Content="60歳台"
-                                  IsChecked="{Binding Sixties}"
-                                  Visibility="{Binding SixtiesExist, Converter={StaticResource B2VCnv}}"
+                                  IsChecked="{Binding Sixties.Value}"
+                                  Visibility="{Binding SixtiesExist.Value, Converter={StaticResource B2VCnv}}"
                                   Command="{Binding FilterCommand}"/>
                         <CheckBox Content="70歳以上"
-                                  IsChecked="{Binding OverSeventies}"
-                                  Visibility="{Binding OverSeventiesExist, Converter={StaticResource B2VCnv}}"
+                                  IsChecked="{Binding OverSeventies.Value}"
+                                  Visibility="{Binding OverSeventiesExist.Value, Converter={StaticResource B2VCnv}}"
                                   Command="{Binding FilterCommand}"/>
                         <Separator/>
                         <CheckBox Content="グループ化"
-                                  IsChecked="{Binding IsGrouping}"
+                                  IsChecked="{Binding IsGrouping.Value}"
                                   Command="{Binding GroupCommand}"/>
                     </StackPanel>
                 </HeaderedContentControl>
@@ -292,7 +292,7 @@
                     </HeaderedContentControl.Header>
                     <StackPanel>
                         <CheckBox Content="日付または日付範囲の選択"
-                                  IsChecked="{Binding Range}"
+                                  IsChecked="{Binding Range.Value}"
                                   Command="{Binding FilterCommand}">
                         </CheckBox>
                         <Calendar SelectionMode="SingleRange"
@@ -307,36 +307,36 @@
                             </i:Interaction.Triggers>
                         </Calendar>
                         <CheckBox Content="今日"
-                                  IsChecked="{Binding Today}"
-                                  Visibility="{Binding TodayExist, Converter={StaticResource B2VCnv}}"
+                                  IsChecked="{Binding Today.Value}"
+                                  Visibility="{Binding TodayExist.Value, Converter={StaticResource B2VCnv}}"
                                   Command="{Binding FilterCommand}"/>
                         <CheckBox Content="昨日"
-                                  IsChecked="{Binding Yesterday}"
-                                  Visibility="{Binding YesterdayExist, Converter={StaticResource B2VCnv}}"
+                                  IsChecked="{Binding Yesterday.Value}"
+                                  Visibility="{Binding YesterdayExist.Value, Converter={StaticResource B2VCnv}}"
                                   Command="{Binding FilterCommand}"/>
                         <CheckBox Content="今週"
-                                  IsChecked="{Binding ThisWeek}"
-                                  Visibility="{Binding ThisWeekExist, Converter={StaticResource B2VCnv}}"
+                                  IsChecked="{Binding ThisWeek.Value}"
+                                  Visibility="{Binding ThisWeekExist.Value, Converter={StaticResource B2VCnv}}"
                                   Command="{Binding FilterCommand}"/>
                         <CheckBox Content="先週"
-                                  IsChecked="{Binding LastWeek}"
-                                  Visibility="{Binding LastWeekExist, Converter={StaticResource B2VCnv}}"
+                                  IsChecked="{Binding LastWeek.Value}"
+                                  Visibility="{Binding LastWeekExist.Value, Converter={StaticResource B2VCnv}}"
                                   Command="{Binding FilterCommand}"/>
                         <CheckBox Content="今月"
-                                  IsChecked="{Binding ThisMonth}"
-                                  Visibility="{Binding ThisMonthExist, Converter={StaticResource B2VCnv}}"
+                                  IsChecked="{Binding ThisMonth.Value}"
+                                  Visibility="{Binding ThisMonthExist.Value, Converter={StaticResource B2VCnv}}"
                                   Command="{Binding FilterCommand}"/>
                         <CheckBox Content="先月"
-                                  IsChecked="{Binding LastMonth}"
-                                  Visibility="{Binding LastMonthExist, Converter={StaticResource B2VCnv}}"
+                                  IsChecked="{Binding LastMonth.Value}"
+                                  Visibility="{Binding LastMonthExist.Value, Converter={StaticResource B2VCnv}}"
                                   Command="{Binding FilterCommand}"/>
                         <CheckBox Content="かなり前"
-                                  IsChecked="{Binding MorePast}"
-                                  Visibility="{Binding MorePastExist, Converter={StaticResource B2VCnv}}"
+                                  IsChecked="{Binding MorePast.Value}"
+                                  Visibility="{Binding MorePastExist.Value, Converter={StaticResource B2VCnv}}"
                                   Command="{Binding FilterCommand}"/>
                         <Separator/>
                         <CheckBox Content="グループ化"
-                                  IsChecked="{Binding IsGrouping}"
+                                  IsChecked="{Binding IsGrouping.Value}"
                                   Command="{Binding GroupCommand}"/>
                     </StackPanel>
                 </HeaderedContentControl>
@@ -368,20 +368,20 @@
                     </HeaderedContentControl.Header>
                     <StackPanel>
                         <CheckBox Content="A型"
-                                  IsChecked="{Binding ShowAType}"
+                                  IsChecked="{Binding ShowAType.Value}"
                                   Command="{Binding FilterCommand}"/>
                         <CheckBox Content="B型"
-                                  IsChecked="{Binding ShowBType}"
+                                  IsChecked="{Binding ShowBType.Value}"
                                   Command="{Binding FilterCommand}"/>
                         <CheckBox Content="AB型"
-                                  IsChecked="{Binding ShowABType}"
+                                  IsChecked="{Binding ShowABType.Value}"
                                   Command="{Binding FilterCommand}"/>
                         <CheckBox Content="O型"
-                                  IsChecked="{Binding ShowOType}"
+                                  IsChecked="{Binding ShowOType.Value}"
                                   Command="{Binding FilterCommand}"/>
                         <Separator/>
                         <CheckBox Content="グループ化"
-                                  IsChecked="{Binding IsGrouping}"
+                                  IsChecked="{Binding IsGrouping.Value}"
                                   Command="{Binding GroupCommand}"/>
                     </StackPanel>
                 </HeaderedContentControl>
@@ -416,7 +416,7 @@
                                       ItemsSource="{Binding Selections}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate DataType="{x:Type local:UnlimitedSelectionItemViewModel}">
-                                    <CheckBox IsChecked="{Binding IsSelected}"
+                                    <CheckBox IsChecked="{Binding IsSelected.Value}"
                                               Content="{Binding Value}"
                                               Command="{Binding SelectedCommand}"/>
                                 </DataTemplate>
@@ -424,7 +424,7 @@
                         </ItemsControl>
                         <Separator/>
                         <CheckBox Content="グループ化"
-                                  IsChecked="{Binding IsGrouping}"
+                                  IsChecked="{Binding IsGrouping.Value}"
                                   Command="{Binding GroupCommand}"/>
                     </StackPanel>
                 </HeaderedContentControl>
@@ -443,9 +443,9 @@
         </DataTemplate>
         <DataTemplate DataType="{x:Type local:StringViewModel}">
             <TextBlock>
-                <Run Text="{Binding PreviousFilteredText}"/>
-                <Run Text="{Binding FilteredText}" Background="Yellow"/>
-                <Run Text="{Binding FollowingFilteredText}"/>
+                <Run Text="{Binding PreviousFilteredText.Value}"/>
+                <Run Text="{Binding FilteredText.Value}" Background="Yellow"/>
+                <Run Text="{Binding FollowingFilteredText.Value}"/>
             </TextBlock>
         </DataTemplate>
         <DataTemplate x:Key="AgeCell" DataType="{x:Type local:PersonViewModel}">

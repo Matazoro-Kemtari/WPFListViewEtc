@@ -56,7 +56,7 @@ namespace WpfApp1
             }
             else
             {
-                var vm = this.Columns.First(c => c is StringColumnViewModel scvm && scvm.DisplayMenber == nameof(PersonViewModel.Name));
+                var vm = this.Columns.First(c => c is StringColumnViewModel scvm && scvm.DisplayMenber.Value == nameof(PersonViewModel.Name));
                 vm.FilterRequested -= this.FilterItems;
                 vm.SortRequested -= this.SortItems;
                 this.Columns.Remove(vm);
@@ -74,7 +74,7 @@ namespace WpfApp1
             }
             else
             {
-                var vm = this.Columns.First(c => c is StringColumnViewModel scvm && scvm.DisplayMenber == nameof(PersonViewModel.Furigana));
+                var vm = this.Columns.First(c => c is StringColumnViewModel scvm && scvm.DisplayMenber.Value == nameof(PersonViewModel.Furigana));
                 vm.FilterRequested -= this.FilterItems;
                 vm.SortRequested -= this.SortItems;
                 this.Columns.Remove(vm);
@@ -114,7 +114,7 @@ namespace WpfApp1
             }
             else
             {
-                var vm = (DateTimeColumnViewModel)this.Columns.First(c => c is DateTimeColumnViewModel dcvm && dcvm.DisplayMenber == nameof(PersonViewModel.LastLogin));
+                var vm = (DateTimeColumnViewModel)this.Columns.First(c => c is DateTimeColumnViewModel dcvm && dcvm.DisplayMenber.Value == nameof(PersonViewModel.LastLogin));
                 vm.FilterRequested -= this.FilterItems;
                 vm.SortRequested -= this.SortItems;
                 vm.GroupingRequested -= this.GroupItems;
@@ -172,7 +172,7 @@ namespace WpfApp1
             ListSortDirection nextDirection;
             if (column == this.currentSortColumn && requestedDirection is null)
             {
-                nextDirection = column.SortDirection switch
+                nextDirection = column.SortDirection.Value switch
                 {
                     ListSortDirection.Ascending => ListSortDirection.Descending,
                     ListSortDirection.Descending => ListSortDirection.Ascending,
@@ -209,7 +209,7 @@ namespace WpfApp1
             if (sender is not ColumnViewModelBase column) { return; }
             var view = CollectionViewSource.GetDefaultView(this.Persons);
             view.GroupDescriptions.Clear();
-            if (column.IsGrouping)
+            if (column.IsGrouping.Value)
              {
                 if (this.currentGroupColumn is not null)
                 {

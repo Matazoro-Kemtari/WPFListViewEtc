@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Reactive.Bindings;
 
 namespace WpfApp1
 {
@@ -9,49 +10,34 @@ namespace WpfApp1
         public StringViewModel(string originalString)
         {
             this.originalString = originalString;
-            this.previousFilteredText = string.Empty;
-            this.filteredText = string.Empty;
-            this.followingFilteredText = originalString;
+            PreviousFilteredText = new(string.Empty);
+            FilteredText = new(string.Empty);
+            FollowingFilteredText =new( originalString);
         }
 
-        public string Value => this.originalString;
+        public ReactivePropertySlim<string> Value => new(this.originalString);
 
-        private string previousFilteredText;
-        public string PreviousFilteredText
-        {
-            get => this.previousFilteredText;
-            set => this.SetProperty(ref this.previousFilteredText, value);
-        }
+        public ReactivePropertySlim<string> PreviousFilteredText { get; set; }
 
-        private string filteredText;
-        public string FilteredText
-        {
-            get => this.filteredText;
-            set => this.SetProperty(ref this.filteredText, value);
-        }
+        public ReactivePropertySlim<string> FilteredText { get; set; }
 
-        private string followingFilteredText;
-        public string FollowingFilteredText
-        {
-            get => this.followingFilteredText;
-            set => this.SetProperty(ref this.followingFilteredText, value);
-        }
+        public ReactivePropertySlim<string> FollowingFilteredText { get; set; }
 
         public bool Filter(string filterText)
         {
             var index = this.originalString.IndexOf(filterText);
             if (index == -1)
             {
-                this.PreviousFilteredText = this.originalString;
-                this.FilteredText = string.Empty;
-                this.FollowingFilteredText = string.Empty;
+                this.PreviousFilteredText.Value = this.originalString;
+                this.FilteredText.Value = string.Empty;
+                this.FollowingFilteredText.Value = string.Empty;
                 return false;
             }
             else
             {
-                this.PreviousFilteredText = this.originalString[..index];
-                this.FilteredText = this.originalString.Substring(index, filterText.Length);
-                this.FollowingFilteredText = this.originalString[(index + filterText.Length)..];
+                this.PreviousFilteredText.Value = this.originalString[..index];
+                this.FilteredText.Value = this.originalString.Substring(index, filterText.Length);
+                this.FollowingFilteredText.Value = this.originalString[(index + filterText.Length)..];
                 return true;
             }
         }

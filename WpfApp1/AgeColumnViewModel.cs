@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Reactive.Bindings;
+using System;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -13,140 +14,43 @@ namespace WpfApp1
         public override object CellTemplateResourceKey => "AgeCell";
         private ObservableCollection<PersonViewModel> persons;
 
-        private bool underTen;
-        public bool UnderTen
-        {
-            get => this.underTen;
-            set
-            {
-                this.SetProperty(ref this.underTen, value);
-                this.OnPropertyChanged(nameof(this.IsFiltering));
-            }
-        }
-        private bool teenAgers;
-        public bool TeenAgers
-        {
-            get => this.teenAgers;
-            set
-            {
-                this.SetProperty(ref this.teenAgers, value);
-                this.OnPropertyChanged(nameof(this.IsFiltering));
-            }
-        }
-        private bool twenties;
-        public bool Twenties
-        {
-            get => this.twenties;
-            set
-            {
-                this.SetProperty(ref this.twenties, value);
-                this.OnPropertyChanged(nameof(this.IsFiltering));
-            }
-        }
-        private bool thirties;
-        public bool Thirties
-        {
-            get => this.thirties;
-            set
-            {
-                this.SetProperty(ref this.thirties, value);
-                this.OnPropertyChanged(nameof(this.IsFiltering));
-            }
-        }
-        private bool fourties;
-        public bool Fourties
-        {
-            get => this.fourties;
-            set
-            {
-                this.SetProperty(ref this.fourties, value);
-                this.OnPropertyChanged(nameof(this.IsFiltering));
-            }
-        }
-        private bool filties;
-        public bool Fifties
-        {
-            get => this.filties;
-            set
-            {
-                this.SetProperty(ref this.filties, value);
-                this.OnPropertyChanged(nameof(this.IsFiltering));
-            }
-        }
-        private bool sixties;
-        public bool Sixties
-        {
-            get => this.sixties;
-            set
-            {
-                this.SetProperty(ref this.sixties, value);
-                this.OnPropertyChanged(nameof(this.IsFiltering));
-            }
-        }
-        private bool overSeventies;
-        public bool OverSeventies
-        {
-            get => this.overSeventies;
-            set
-            {
-                this.SetProperty(ref this.overSeventies, value);
-                this.OnPropertyChanged(nameof(this.IsFiltering));
-            }
-        }
-        private bool underTenExist;
-        public bool UnderTenExist
-        {
-            get => this.underTenExist;
-            set => this.SetProperty(ref this.underTenExist, value);
-        }
-        private bool teenAgersExist;
-        public bool TeenAgersExist
-        {
-            get => this.teenAgersExist;
-            set => this.SetProperty(ref this.teenAgersExist, value);
-        }
-        private bool twentiesExist;
-        public bool TwentiesExist
-        {
-            get => this.twentiesExist;
-            set => this.SetProperty(ref this.twentiesExist, value);
-        }
-        private bool thirtiesExist;
-        public bool ThirtiesExist
-        {
-            get => this.thirtiesExist;
-            set => this.SetProperty(ref this.thirtiesExist, value);
-        }
-        private bool fourtiesExist;
-        public bool FourtiesExist
-        {
-            get => this.fourtiesExist;
-            set => this.SetProperty(ref this.fourtiesExist, value);
-        }
-        private bool filtiesExist;
-        public bool FiftiesExist
-        {
-            get => this.filtiesExist;
-            set => this.SetProperty(ref this.filtiesExist, value);
-        }
-        private bool sixtiesExist;
-        public bool SixtiesExist
-        {
-            get => this.sixtiesExist;
-            set => this.SetProperty(ref this.sixtiesExist, value);
-        }
-        private bool overSeventiesExist;
-        public bool OverSeventiesExist
-        {
-            get => this.overSeventiesExist;
-            set => this.SetProperty(ref this.overSeventiesExist, value);
-        }
+        public ReactivePropertySlim<bool> UnderTen { get; set; } = new();
 
-        public override bool IsFiltering =>
-            this.UnderTen || this.TeenAgers ||
-            this.Twenties || this.Thirties ||
-            this.Fourties || this.Fifties ||
-            this.Sixties || this.OverSeventies;
+        public ReactivePropertySlim<bool> TeenAgers { get; set; } = new();
+
+        public ReactivePropertySlim<bool> Twenties { get; set; } = new();
+
+        public ReactivePropertySlim<bool> Thirties { get; set; } = new();
+
+        public ReactivePropertySlim<bool> Fourties { get; set; } = new();
+
+        public ReactivePropertySlim<bool> Fifties { get; set; } = new();
+
+        public ReactivePropertySlim<bool> Sixties { get; set; } = new();
+
+        public ReactivePropertySlim<bool> OverSeventies { get; set; } = new();
+
+        public ReactivePropertySlim<bool> UnderTenExist { get; set; } = new();
+
+        public ReactivePropertySlim<bool> TeenAgersExist { get; set; } = new();
+
+        public ReactivePropertySlim<bool> TwentiesExist { get; set; } = new();
+
+        public ReactivePropertySlim<bool> ThirtiesExist { get; set; } = new();
+
+        public ReactivePropertySlim<bool> FourtiesExist { get; set; } = new();
+
+        public ReactivePropertySlim<bool> FiftiesExist { get; set; } = new();
+
+        public ReactivePropertySlim<bool> SixtiesExist { get; set; } = new();
+
+        public ReactivePropertySlim<bool> OverSeventiesExist { get; set; } = new();
+
+        public override ReactivePropertySlim<bool> IsFiltering => new(
+            this.UnderTen.Value || this.TeenAgers.Value ||
+            this.Twenties.Value || this.Thirties.Value ||
+            this.Fourties.Value || this.Fifties.Value ||
+            this.Sixties.Value || this.OverSeventies.Value);
 
         public AgeColumnViewModel(ObservableCollection<PersonViewModel> persons)
         {
@@ -168,17 +72,17 @@ namespace WpfApp1
         protected override bool FilterOverride(object itemVm)
         {
             if (itemVm is not PersonViewModel pvm) { return false; }
-            if (!this.IsFiltering) { return true; }
+            if (!this.IsFiltering.Value) { return true; }
             var category = pvm.Age.CategorizeAge();
             return
-                (this.UnderTen && category == AgeCategory.UnderTen) ||
-                (this.TeenAgers && category == AgeCategory.TeenAgers) ||
-                (this.Twenties && category == AgeCategory.Twenties) ||
-                (this.Thirties && category == AgeCategory.Thirties) ||
-                (this.Fourties && category == AgeCategory.Fourties) ||
-                (this.Fifties && category == AgeCategory.Fifties) ||
-                (this.Sixties && category == AgeCategory.Sixties) ||
-                (this.overSeventies && category == AgeCategory.OverSeventies);
+                (this.UnderTen.Value && category == AgeCategory.UnderTen) ||
+                (this.TeenAgers.Value && category == AgeCategory.TeenAgers) ||
+                (this.Twenties.Value && category == AgeCategory.Twenties) ||
+                (this.Thirties.Value && category == AgeCategory.Thirties) ||
+                (this.Fourties.Value && category == AgeCategory.Fourties) ||
+                (this.Fifties.Value && category == AgeCategory.Fifties) ||
+                (this.Sixties.Value && category == AgeCategory.Sixties) ||
+                (this.OverSeventies.Value && category == AgeCategory.OverSeventies);
         }
 
         public override GroupDescription GroupOverride()
@@ -188,15 +92,15 @@ namespace WpfApp1
 
         protected override void ResetFilterAndGroupCommandExecuteOverride()
         {
-            this.UnderTen = false;
-            this.TeenAgers = false;
-            this.Twenties = false;
-            this.Thirties = false;
-            this.Fourties = false;
-            this.Fifties = false;
-            this.Sixties = false;
-            this.OverSeventies = false;
-            this.IsGrouping = false;
+            this.UnderTen.Value = false;
+            this.TeenAgers.Value = false;
+            this.Twenties.Value = false;
+            this.Thirties.Value = false;
+            this.Fourties.Value = false;
+            this.Fifties.Value = false;
+            this.Sixties.Value = false;
+            this.OverSeventies.Value = false;
+            this.IsGrouping.Value = false;
         }
 
         private void Persons_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -219,28 +123,28 @@ namespace WpfApp1
                 switch (person.Age.CategorizeAge())
                 {
                     case AgeCategory.UnderTen:
-                        this.UnderTenExist = true;
+                        this.UnderTenExist.Value = true;
                         break;
                     case AgeCategory.TeenAgers:
-                        this.TeenAgersExist = true;
+                        this.TeenAgersExist.Value = true;
                         break;
                     case AgeCategory.Twenties:
-                        this.TwentiesExist = true;
+                        this.TwentiesExist.Value = true;
                         break;
                     case AgeCategory.Thirties:
-                        this.ThirtiesExist = true;
+                        this.ThirtiesExist.Value = true;
                         break;
                     case AgeCategory.Fourties:
-                        this.FourtiesExist = true;
+                        this.FourtiesExist.Value = true;
                         break;
                     case AgeCategory.Fifties:
-                        this.FiftiesExist = true;
+                        this.FiftiesExist.Value = true;
                         break;
                     case AgeCategory.Sixties:
-                        this.SixtiesExist = true;
+                        this.SixtiesExist.Value = true;
                         break;
                     case AgeCategory.OverSeventies:
-                        this.OverSeventiesExist = true;
+                        this.OverSeventiesExist.Value = true;
                         break;
                 }
             }

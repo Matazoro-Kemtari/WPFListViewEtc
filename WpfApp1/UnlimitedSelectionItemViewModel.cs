@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Reactive.Bindings;
 using System;
 using System.Windows.Input;
 
@@ -9,16 +10,7 @@ namespace WpfApp1
     {
         public object? Value { get; }
 
-        private bool isSelected;
-        public bool IsSelected
-        {
-            get => this.isSelected;
-            set
-            {
-                this.SetProperty(ref this.isSelected, value);
-                this.Selected?.Invoke(this, EventArgs.Empty);
-            }
-        }
+        public ReactivePropertySlim<bool> IsSelected { get; set; } = new();
 
         public ICommand SelectedCommand { get; }
 

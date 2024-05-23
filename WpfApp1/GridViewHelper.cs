@@ -67,8 +67,8 @@ namespace WpfApp1
                 CellTemplate =
                     columnVm.CellTemplateResourceKey is not null ?
                     (DataTemplate)App.Current.Resources[columnVm.CellTemplateResourceKey] :
-                    columnVm.DisplayMenber is not null ?
-                    CreateContentControlTemplate(columnVm.DisplayMenber) :
+                    columnVm.DisplayMenber.Value is not null ?
+                    CreateContentControlTemplate(columnVm.DisplayMenber.Value) :
                     null,
             };
         }
